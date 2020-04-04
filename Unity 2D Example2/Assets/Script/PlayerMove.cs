@@ -105,4 +105,39 @@ public class PlayerMove : MonoBehaviour
         }
         
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Enermy")
+        {
+            //Debug.Log("플레이어가 맞았습니다!");
+            OnDamaged(collision.transform.position);
+        }    
+    }
+    void OnDamaged(Vector2 targetPos)
+    {
+        //타격시 layer를 11로
+        gameObject.layer = 11; //layer를 playerDamaged로
+        
+        //타격시 색
+        sr.color = new Color(1, 1, 1, 0.4f); // R G B 투명도
+
+        //타격 효과
+
+        int dirc = 
+            transform.position.x - targetPos.x > 0 ? 1 : -1; 
+        r2d.AddForce(new Vector2(dirc,1) * 10, ForceMode2D.Impulse);
+        //무적모드까지 함수
+
+
+        //애니메이션 추가
+        at.SetTrigger("doDamaged");
+
+        Invoke("OffDamaged", 3);
+    }
+    void OffDamaged()
+    {
+        gameObject.layer = 10;
+        sr.color = new Color(1, 1, 1, 1); // R G B 투명도
+    }
 }

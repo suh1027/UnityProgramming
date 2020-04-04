@@ -63,7 +63,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\PlayerMove.cs" />
+    <Compile Include="Assets\Script\MonsterMove.cs" />
+    <Compile Include="Assets\Script\PlayerMove.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/서지훈/Documents/GP/UnityProgramming/Unity 2D Example2/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
