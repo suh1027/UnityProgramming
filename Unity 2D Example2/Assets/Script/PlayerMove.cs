@@ -1,20 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+    public GameManager gameManager;
     public float maxSpeed;
     public float maxJump;
     SpriteRenderer sr;
     Rigidbody2D r2d;
     Animator at;
+    CapsuleCollider2D c2d;
     // Start is called before the first frame update
     void Awake()
     {
         r2d = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         at = GetComponent<Animator>();
+        c2d = GetComponent<CapsuleCollider2D>();
     }
     
     // # Stop Speed
@@ -34,7 +38,7 @@ public class PlayerMove : MonoBehaviour
         }
 
         //Diriction Sprite 애니메이션 Flip
-        if (Input.GetButtonDown("Horizontal"))
+        if (Input.GetButton("Horizontal"))
         {
             //flipx ==> bool변수
             sr.flipX = Input.GetAxisRaw("Horizontal") == -1; //키입력이 음수일때 true => Flip 되게 만든다
@@ -58,6 +62,11 @@ public class PlayerMove : MonoBehaviour
 
 
 
+    }
+
+    public void VelocityZero()
+    {
+        r2d.velocity = Vector2.zero;
     }
 
     // Move player
@@ -110,9 +119,31 @@ public class PlayerMove : MonoBehaviour
     {
         if(collision.gameObject.tag == "Enermy")
         {
+            //몬스터 처치(몬스터보다 위에있고 아래로 낙하중)
+            if(r2d.velocity.y < 0 && 
+                transform.position.y > collision.transform.position.y)
+            {
+                gameManager.stagePoint += 100;
+                OnAttack(collision.transform);
+            }
+
+            else { 
             //Debug.Log("플레이어가 맞았습니다!");
-            OnDamaged(collision.transform.position);
+                OnDamaged(collision.transform.position);
+            }
         }    
+    }
+    public void OnAttack(Transform enermy)
+    {
+        //point 
+        gameManager.stagePoint += 100;
+
+        //reaction force
+        r2d.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+
+        //enermy die
+        MonsterMove mMove = enermy.GetComponent<MonsterMove>();
+        mMove.Damaged();
     }
     void OnDamaged(Vector2 targetPos)
     {
@@ -133,11 +164,57 @@ public class PlayerMove : MonoBehaviour
         //애니메이션 추가
         at.SetTrigger("doDamaged");
 
+        //health Down
+        gameManager.HealthDown();
+
         Invoke("OffDamaged", 3);
     }
     void OffDamaged()
     {
         gameObject.layer = 10;
         sr.color = new Color(1, 1, 1, 1); // R G B 투명도
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        //Point를 얻으면서 동전이 사라지도록 설정
+        if(collision.gameObject.tag == "item")
+        {
+            bool isBronze = collision.gameObject.name.Contains("Bronze");
+            bool isSilver = collision.gameObject.name.Contains("Silver");
+            bool isGold = collision.gameObject.name.Contains("Gold");
+
+            if (isBronze)
+            {
+                gameManager.stagePoint += 50;
+            }
+            else if (isSilver)
+            {
+                gameManager.stagePoint += 100;
+            }
+            else if (isGold)
+            {
+                gameManager.stagePoint += 300;
+            }
+            collision.gameObject.SetActive(false);
+        }
+        if(collision.gameObject.tag == "Finish")
+        {
+            //Next Stage로 이동
+            gameManager.NextStage();
+        }
+
+       
+    }
+    public void OnDie()
+    {
+        sr.color = new Color(1, 1, 1, 0.4f);
+        // 위아래 뒤집기
+        sr.flipY = true;
+        // Collider Disable
+        c2d.enabled = false;
+        // Effect Jump
+        r2d.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+
     }
 }

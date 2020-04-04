@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class MonsterMove : MonoBehaviour
     Rigidbody2D r2d;
     Animator at;
     SpriteRenderer sr;
+    BoxCollider2D bc2d;
     
     // Start is called before the first frame update
     void Awake()
@@ -16,7 +18,7 @@ public class MonsterMove : MonoBehaviour
         r2d = GetComponent<Rigidbody2D>();
         at = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
-
+        bc2d = GetComponent<BoxCollider2D>();
         
         // Invoke (함수, 초) // 5초뒤에 호출
         Invoke("Think", 5);
@@ -43,7 +45,7 @@ public class MonsterMove : MonoBehaviour
             LayerMask.GetMask("Platform"));
         if(rayhit.collider == null)
         {
-            Debug.Log("경고!! 앞은 낭떠러지");
+            //Debug.Log("경고!! 앞은 낭떠러지");
             // 이동방향 전환
             /* 
              nextMove = nextMove * (-1);
@@ -63,7 +65,7 @@ public class MonsterMove : MonoBehaviour
     {
         //min 값은 포함이 되는데 max값은 포함이 안된다.
         // min <= range < max
-        nextMove = Random.Range(-1, 2);
+        nextMove = UnityEngine.Random.Range(-1, 2);
 
         // WalkSpeed
         at.SetInteger("WalkSpeed", nextMove);
@@ -76,7 +78,7 @@ public class MonsterMove : MonoBehaviour
         }
 
         //Think(); // 재귀함수
-        float nextThinkTime = Random.Range(-2f, 3f);
+        float nextThinkTime = UnityEngine.Random.Range(-2f, 3f);
         Invoke("Think", nextThinkTime);
     }
 
@@ -89,5 +91,25 @@ public class MonsterMove : MonoBehaviour
         //현재 작동중인 모든 Invoke 함수를 멈추는 함수
         //안정적인 함수구동을 위해..
         Invoke("Think", 5);
+    }
+
+    public void Damaged()
+    {
+        // 색 변화
+        sr.color = new Color(1, 1, 1, 0.4f);
+        // 위아래 뒤집기
+        sr.flipY = true;
+        // Collider Disable
+        bc2d.enabled = false;
+
+        // Effect Jump
+        r2d.AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        // Destroy
+        Invoke("DeActive" , 5);
+    }
+
+    void DeActive()
+    {
+        gameObject.SetActive(false);
     }
 }
