@@ -1,0 +1,4 @@
+사운드 오류 => 수정 완
+
+오브젝트 Damaged 시 간헐적 NULLReferenceException 발생
+
