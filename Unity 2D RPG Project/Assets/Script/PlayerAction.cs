@@ -15,7 +15,7 @@ public class PlayerAction : MonoBehaviour
 
     Vector3 dirVec;//현재 바라보고 있는 방향값을 가진 변수
     
-    GameObject scanObject;
+    public GameObject scanObject;
     Rigidbody2D r2d;
     Animator animator;
 
@@ -140,16 +140,13 @@ public class PlayerAction : MonoBehaviour
             0.7f,
             LayerMask.GetMask("Object"));
 
-        if(rayHit.collider != null)
+        if (rayHit.collider != null)
         {
             scanObject = rayHit.collider.gameObject;
         }
         else
         {
             scanObject = null;
-        }
-        
-        
+        }      
     }
-
 }
