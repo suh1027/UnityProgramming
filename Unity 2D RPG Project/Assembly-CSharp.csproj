@@ -69,6 +69,7 @@
     <Compile Include="Assets\Script\QuestData.cs" />
     <Compile Include="Assets\Script\QuestManager.cs" />
     <Compile Include="Assets\Script\TalkManager.cs" />
+    <Compile Include="Assets\Script\TypeEffect.cs" />
     <Compile Include="Assets\Tilemap\Brick\Scripts\Ball.cs" />
     <Compile Include="Assets\Tilemap\Brick\Scripts\Brick.cs" />
     <Compile Include="Assets\Tilemap\Brick\Scripts\GameEnd.cs" />
