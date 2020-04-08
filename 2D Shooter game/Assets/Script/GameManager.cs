@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public float maxSpawnDelay;
     public float curSpawnDelay;
 
+    public GameObject player;
+
     void Update()
     {
         curSpawnDelay += Time.deltaTime;
@@ -26,11 +28,29 @@ public class GameManager : MonoBehaviour
     void SpawnEnermy()
     {
         int ranEnermy = Random.Range(0, 3); // L M S 비행기 세가지 종류
-        int ranPoint = Random.Range(0, 5); //다섯가지 포인트
+        int ranPoint = Random.Range(0, 9); //다섯가지 포인트 + 4가지 우측좌측 추가
         
         //프리팹 생성
-        Instantiate(enermyObjs[ranEnermy],
-            spawnPoints[ranPoint].position,
-            spawnPoints[ranPoint].rotation);
+        GameObject enermy = Instantiate(enermyObjs[ranEnermy],
+                                    spawnPoints[ranPoint].position,
+                                    spawnPoints[ranPoint].rotation);
+        Rigidbody2D r2d = enermy.GetComponent<Rigidbody2D>();
+        Enermy enermyLogic = enermy.GetComponent<Enermy>();
+        enermyLogic.player = player;
+
+        if (ranPoint == 5 || ranPoint == 6) //Right Spawn
+        {
+            enermy.transform.Rotate(Vector3.back * 45);
+            r2d.velocity = new Vector2(enermyLogic.speed * (-1), -1);
+        }
+        else if (ranPoint == 7 || ranPoint == 8) //Left Spawn
+        {
+            enermy.transform.Rotate(Vector3.forward * 45);
+            r2d.velocity = new Vector2(enermyLogic.speed, -1);
+        }
+        else // Front Spawn
+        {
+            r2d.velocity = new Vector2(0, enermyLogic.speed*(-1));
+        }
     }
 }

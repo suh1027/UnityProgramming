@@ -8,6 +8,7 @@ TagManager:
   - BorderBullet
   - Enermy
   - PlayerBullet
+  - EnermyBullet
   layers:
   - Default
   - TransparentFX
