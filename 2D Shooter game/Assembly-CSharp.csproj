@@ -63,10 +63,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\BackGround.cs" />
     <Compile Include="Assets\Script\Bullet.cs" />
     <Compile Include="Assets\Script\Enermy.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\Item.cs" />
+    <Compile Include="Assets\Script\ObjectManager.cs" />
     <Compile Include="Assets\Script\Player.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/서지훈/Documents/GP/UnityProgramming/2D Shooter game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
