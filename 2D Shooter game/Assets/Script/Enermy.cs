@@ -13,9 +13,17 @@ public class Enermy : MonoBehaviour
     public float maxShotDelay;
     public float curShotDelay;
 
+    public int enermyScore;
+
     public GameObject bulletA;
     public GameObject bulletB;
+
+    public GameObject ItemCoin;
+    public GameObject ItemPower;
+    public GameObject ItemBoom;
+
     public GameObject player;
+    
 
     SpriteRenderer spriteRenderer;
     //Rigidbody2D r2d;
@@ -28,8 +36,11 @@ public class Enermy : MonoBehaviour
         //r2d.velocity = Vector2.down * speed; //아래로 내려오도록 설정
     }
 
-    void OnHit(int dmg)
+    public void OnHit(int dmg)
     {
+        if (health <= 0)
+            return;
+        
         health -= dmg;
         spriteRenderer.sprite = sprites[1];
         
@@ -37,7 +48,31 @@ public class Enermy : MonoBehaviour
 
         if(health <= 0)
         {
+            Player playerLogic = player.GetComponent<Player>();
+            playerLogic.score += enermyScore;
+
+            //#. Random Ratio Drop Item
+            int ran = Random.Range(0, 10);
+
+            if(ran < 3)
+            {
+                Debug.Log("No Item");
+            }
+            else if(ran < 6) //Coin
+            {
+                Instantiate(ItemCoin, transform.position, ItemCoin.transform.rotation);
+            }
+            else if(ran < 8) //Power
+            {
+                Instantiate(ItemPower, transform.position, ItemPower.transform.rotation);
+            }
+            else if(ran < 10) //Boom
+            {
+                Instantiate(ItemBoom, transform.position, ItemBoom.transform.rotation);
+            }
+
             Destroy(gameObject);
+
         }
     }
 
@@ -82,7 +117,7 @@ public class Enermy : MonoBehaviour
             Rigidbody2D r2d = bullet.GetComponent<Rigidbody2D>();
 
             Vector3 dirVec = player.transform.position - transform.position;
-            r2d.AddForce(dirVec.normalized * 10, ForceMode2D.Impulse);
+            r2d.AddForce(dirVec.normalized * 2, ForceMode2D.Impulse);
         }
 
         else if (enermyName == "L")
@@ -97,8 +132,8 @@ public class Enermy : MonoBehaviour
             Vector3 dirVecR = player.transform.position - (transform.position + Vector3.right * 0.3f);
             Vector3 dirVecL = player.transform.position - (transform.position + Vector3.right * 0.3f);
 
-            r2dR.AddForce(dirVecR.normalized * 10, ForceMode2D.Impulse);
-            r2dL.AddForce(dirVecL.normalized * 10, ForceMode2D.Impulse);
+            r2dR.AddForce(dirVecR.normalized * 2, ForceMode2D.Impulse);
+            r2dL.AddForce(dirVecL.normalized * 2, ForceMode2D.Impulse);
             //단위 벡터 만드는방법 .normalized 크기는 1로 단위벡터화
         }
 

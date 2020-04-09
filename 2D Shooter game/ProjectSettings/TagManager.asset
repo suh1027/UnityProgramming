@@ -9,6 +9,7 @@ TagManager:
   - Enermy
   - PlayerBullet
   - EnermyBullet
+  - Item
   layers:
   - Default
   - TransparentFX
